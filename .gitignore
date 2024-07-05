@@ -1,0 +1,6 @@
+*.db
+*.py[cod]
+.web
+uploaded_files
+__pycache__/
+venv

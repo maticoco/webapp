@@ -1,0 +1,3 @@
+GOLMM_ROUTE="/MM95320"
+LOGIN_ROUTE = "/login"
+REGISTER_ROUTE = "/register"
