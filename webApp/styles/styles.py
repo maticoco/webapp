@@ -17,6 +17,7 @@ class Spacer(Enum):
     DEFAULT="1em"
     BIG="2em"
     SUPERBIG="5em"
+    IMGBIG="15em"
 
 button_title_style = dict(
     font_size = Spacer.DEFAULT.value

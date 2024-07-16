@@ -5,7 +5,9 @@ from ..repository.base_state import State
 from ..repository.registration import RegistrationState
 from ..repository.upload_state import UploadState
 from ..repository.login_state import require_login, LoginState
-from ..routes import GOLMM_ROUTE, LOGIN_ROUTE , REGISTER_ROUTE
+from ..routes import GOLMM_ROUTE, LOGIN_ROUTE , REGISTER_ROUTE, AIRBAG_00521545140, AIRBAG_TRW_51957878
+from ..modules.module_img_list  import  DASH1,AIRBAG1,AIRBAG2
+
 
 from ..styles.styles import color , accent_color, Spacer
 
@@ -305,12 +307,26 @@ def login_menu_desktop() -> rx.Component:
 
 def cards_grid()->rx.Component:
     return rx.grid(
-                rx.card(
+                cards_modules(img=DASH1,text="Gol G6 ",strong="Magnetti Marelli Nec + 95320",route=GOLMM_ROUTE),
+                cards_modules(img=AIRBAG1,text="FIAT Cronos/Argo/Strada 2023-> ",strong="MOPA A3C07434303 0052154140", route=AIRBAG_00521545140),
+                cards_modules(img=AIRBAG2,text="FIAT Palio/Siena/Strada Novo >2013-2018< ",strong="TRW 00051957878", route=AIRBAG_TRW_51957878),
+                gap="1rem",
+                columns="3",
+                width= "100%",
+                height="43em",
+                padding_x="20em",
+                padding_y="2em"
+                
+            )
+
+def cards_modules(img: str, text: str , strong: str, route: str)-> rx.Component:
+    return rx.card(
                         rx.inset(
                             rx.image(
-                                src="/5U0920830K.webp",
+                                src=img,
                                 padding="0.5em",
-                                size="4",
+                                height="200px",
+                                width="auto",                                
                                 border_radius="15px 50px",
                                 border="5px solid #555",
                             ),
@@ -318,22 +334,14 @@ def cards_grid()->rx.Component:
                             pb="current",
                         ),
                         rx.text(
-                            "Gol G6 ",rx.text.strong(("Magnetti Marelli Nec + 95320"),as_="label",
+                            text,rx.text.strong((strong),as_="label",                           
                         ),
                         
                     ),
-                    rx.button("Load Dump", size="3",on_click=rx.redirect(GOLMM_ROUTE)),
+                    rx.button("Load Dump", size="3",on_click=rx.redirect(route)),
                     width="20em",
                     height="20em"
-                ),
-                gap="1rem",
-                
-                width= "100%",
-                height="43em",
-                padding_x="20em",
-                padding_y="2em"
-                
-            )
+                )
 
 def signup_default_icons() -> rx.Component:
     return rx.card(
@@ -504,6 +512,7 @@ def upload() -> rx.Component:
 
 def result_card() -> rx.Component:
     return rx.card(
+        rx.image(src=UploadState.img),
         rx.text(UploadState.decoded_data,white_space="pre"),
         
         size="5",
@@ -618,3 +627,23 @@ def login_component() -> rx.Component:
                     align="center",
                     justify="center",
                     )
+
+def clear_card() -> rx.Component:
+    return rx.card(
+        rx.text(UploadState.decoded_data),
+        rx.text(UploadState.modified_filename),
+        rx.image(src=UploadState.img),
+        rx.cond(
+            UploadState.show_download_button,
+            rx.button(
+                "Descargar archivo modificado", 
+                on_click=rx.download(rx.get_upload_url(UploadState.modified_filename))
+            ),
+            rx.text(f"Cargue aqui el dataflash del RENESSAS R7f7010183")
+            
+        ),
+        size="5",
+        border=f"1px solid {color}",
+        width="100%",
+        height="100%"
+    )
