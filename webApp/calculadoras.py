@@ -7,7 +7,6 @@ CATALOG_ROUTE = "/calcs"
 
 @rx.page(route=CATALOG_ROUTE,title="Calculadoras")
 
-@require_login
 def calcs_page() -> rx.Component:
     return rx.box(            
             navbar_user(),

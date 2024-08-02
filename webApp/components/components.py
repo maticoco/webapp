@@ -5,14 +5,11 @@ from ..repository.base_state import State
 from ..repository.registration import RegistrationState
 from ..repository.upload_state import UploadState
 from ..repository.login_state import require_login, LoginState
-from ..repository.users_state import UserState
 from ..routes import GOLMM_ROUTE, LOGIN_ROUTE , REGISTER_ROUTE, AIRBAG_00521545140, AIRBAG_TRW_51957878
 from ..modules.module_img_list  import  DASH1,AIRBAG1,AIRBAG2
-from ..model.user import User
-from ..model.auth_session import AuthSession
 
 
-from ..styles.styles import color , accent_color, Size
+from ..styles.styles import color , accent_color, Spacer
 
 
 def dark_light_theme()-> rx.Component: 
@@ -35,51 +32,56 @@ def navbar_link(text: str, url: str) -> rx.Component:
 
 def navbar_user() -> rx.Component:
     return      rx.box(
+                rx.hstack(dark_light_theme(),justify="end",padding="1em"),
                 rx.desktop_only(
                     rx.hstack(
-                        heading_component(),
+                        rx.hstack(
+                            rx.image(
+                                src="/logo_cerrajeria.png",
+                                width=Spacer.SUPERBIG.value,
+                                height="auto",
+                                border_radius="25%",
+                                ),
+                            rx.heading(
+                                "Cerrajeria Automotriz", size="7", weight="bold",color_scheme=color
+                                ),
+                            align_items="center",
+                            padding="1em"
+                            ),
                         rx.hstack(
                             navbar_link("Home", "/#"),
                             navbar_link("Sobre Nosotros", "/about"),
                             navbar_link("Calculadoras", "/calcs"),
                             navbar_link("Contacto", "/#"),
                             spacing="5",
-                            justify="between" 
                             ),
-                            rx.spacer(),
                             username(),                                   
                             user_menu(),
-                            rx.vstack(
-                                dark_light_theme(),                            
-                                login_menu_desktop(),    
-                                padding=Size.DEFAULT.value,
-                                align="end" 
-                            ),                     
-                            
+                            login_menu_desktop(),                     
+                            justify="between",
                             align="center",
-                            padding_x=Size.DEFAULT.value,
-                            padding_bottom=Size.SMALL.value,
-                            witdh="100%"
-                            ),
+                            padding_x="1em",
+                            padding_bottom="0.5em"
                             
-                        ),
+                                ),
+                            ),
                 rx.mobile_and_tablet(
                     rx.hstack(
                         rx.hstack(
                             rx.image(
                                 src="/logo_cerrajeria.png",
-                                width=Size.SUPERBIG.value,
+                                width=Spacer.BIG.value,
                                 height="auto",
                                 border_radius="25%",
-                                    ),
-                                    margin=Size.SMALL.value,
-                                    align_items="center",
-                                ),
-                                rx.spacer(),
-                                username(),
-                                user_menu(),
-                                login_menu_movile(),
-                                padding=Size.SMALL.value
+                            ),
+                            rx.heading(
+                                "Cerrajeria Automotriz", size="6", weight="bold",color_scheme=color
+                            ),
+                            align_items="center",
+                        ),
+                        username(),
+                        user_menu(),
+                        login_menu_movile(),
                                 ),
                         justify="between",
                         align_items="center",
@@ -91,22 +93,6 @@ def navbar_user() -> rx.Component:
                 width="100%",
                 z_index="200",
             )
-
-def heading_component()-> rx.Component:
-    return rx.hstack(
-                rx.image(
-                    src="/logo_cerrajeria.png",
-                    width=Size.SUPERBIG.value,
-                    height="auto",
-                    border_radius="25%",
-                    ),
-                rx.heading(
-                    "Cerrajeria Automotriz", size="7", weight="bold",color_scheme=color
-                    ),
-                justify="start",    
-                align_items="center",
-                padding=Size.DEFAULT.value
-                ),
     
 def username()-> rx.Component:
     return rx.heading(
@@ -115,13 +101,14 @@ def username()-> rx.Component:
 
 def image_component()-> rx.Component:
     return rx.flex(
-            rx.image(src='/background.jpg',padding=Size.BIG.value),
+            rx.image(src='/background.jpg')
+            ,
             width="100%",
-            height="100%",
             direction="column",
             align="center",
-            justify="center",            
-            )
+            justify="center",
+            
+        )
 
 def footer_item(text: str, href: str) -> rx.Component:
     return rx.link(rx.text(text, size="3"), href=href)
@@ -171,30 +158,28 @@ def socials() -> rx.Component:
 
 def footer() -> rx.Component:
     return      rx.el.footer(
-                    rx.vstack(
-                        rx.divider(),
+                rx.vstack(
+                    rx.divider(),
+                    rx.hstack(
                         rx.hstack(
-                            rx.hstack(
-                                    footer_item("Privacy Policy", "/#"),
-                                    footer_item("Terms of Service", "/#"),
-                                    spacing="4",
-                                    align="center",
-                                    width="100%",
-                                    ),
-                                    socials(),
-                                    justify="between",
-                                    width="100%",
-                                ),
-                                spacing="5",
-                                width="100%",
-                            ),
-                            
+                            footer_item("Privacy Policy", "/#"),
+                            footer_item("Terms of Service", "/#"),
+                            spacing="4",
+                            align="center",
                             width="100%",
-                            padding="1em",
-                            bg=rx.color(color, 3),
-                            justify="end",
-                            
-                            )
+                        ),
+                        socials(),
+                        justify="between",
+                        width="100%",
+                    ),
+                    spacing="5",
+                    width="100%",
+                ),
+                
+                width="100%",
+                padding="1em",
+                bg=rx.color(color, 3),
+                )
 
 def login_default() -> rx.Component:
     return rx.card(
@@ -466,7 +451,7 @@ def singup_component() -> rx.Component:
                     rx.chakra.text(RegistrationState.error_message),
                 ),
                 register_form,
-                padding_top=Size.SMALL.value,
+                padding_top=Spacer.SMALL,
             ),
         ),
         
@@ -661,111 +646,4 @@ def clear_card() -> rx.Component:
         border=f"1px solid {color}",
         width="100%",
         height="100%"
-    )
-
-def table_user(list_user: list[User])-> rx.Component:
-    return rx.table.root(
-       rx.table.header(
-           rx.table.row(
-               rx.table.column_header_cell('UserID'),
-               rx.table.column_header_cell('Username'),               
-               rx.table.column_header_cell('Whitelist'),
-
-               
-           )
-       ),
-       rx.table.body(
-            rx.foreach(list_user, row_table)
-       ) 
-    )
-
-def row_table(user: User)-> rx.Component:
-    return rx.table.row(
-        rx.table.cell(user.id),
-        rx.table.cell(user.username),
-        rx.table.cell(user.enabled),
-
-        
-        rx.table.cell(rx.hstack(            
-            delete_user_dialogo_component(user.username)
-        ))
-    )
-
-def search_user_component() -> rx.Component:
-    return rx.hstack(
-        rx.input(placeholder='Ingrese usuario', on_change=UserState.search_on_change),
-        rx.button ('Buscar Usuario' , on_click= UserState.get_user_by_username)
-    )
-
-def create_user_form()-> rx.Component:
-    return rx.form(
-                rx.vstack(
-                    rx.input(
-                        placeholder='Nombre de usuario',
-                        name= 'username'
-                    ),
-                    rx.input(
-                        placeholder='Email',
-                        name= 'Email'
-                    ),
-                    rx.input(
-                        placeholder='Contraseña',
-                        name= 'password',
-                        type='password'
-                    ),
-                    
-                    rx.dialog.close(
-                        rx.button('Guardar', type='submit')
-                    ),
-                ),
-                on_submit=UserState.create_user,
-    )
-
-def create_user_dialogo_componenet() -> rx.Component:
-    return rx.dialog.root(
-        rx.dialog.trigger(rx.button('Crear Usuario') ),
-        rx.dialog.content(
-            rx.flex(
-                rx.dialog.title('Crear Usuario'),
-                #create_user_form(),
-                singup_component(),
-                justify='center',
-                align='center',
-                direction='column',
-            ),
-            rx.flex(
-                rx.dialog.close(
-                    rx.button('Cancelar', color_scheme='gray', variant= 'soft')
-                ),
-                spacing='3',
-                margin_top=Size.DEFAULT.value,
-                justify='end',
-            ),
-            style={'width': '600px'}
-        ),
-    )
-
-def delete_user_dialogo_component(username: str) -> rx.Component:
-    return rx.dialog.root(
-        rx.dialog.trigger(rx.button(rx.icon('trash-2'))),
-        rx.dialog.content(
-            rx.dialog.title('Eliminar usuario'),
-            rx.dialog.description('Esta seguro de querer eliminar el usuario '+ username),
-            rx.flex(
-                rx.dialog.close(
-                    rx.button(
-                        'Cancelar',
-                        color_scheme='gray',
-                        variant='soft'
-                    ),
-                ),
-                rx.dialog.close(
-                    rx.button('Confirmar', on_click=UserState.delete_user(username)),    
-                ),
-
-                spacing='3',
-                margin_top='16px',
-                justify='end',
-            )
-        )
     )

@@ -7,17 +7,15 @@ from .styles.styles import color , accent_color
 
 def index():
     """The main view."""
-    return  rx.vstack(
-            navbar_user(), 
-            rx.spacer(),             
+    return  rx.box(
+            navbar_user(),              
             image_component(),
-            rx.spacer(),  
-            footer(),
-            justify="end",
-            spacing="6",     
+        
+            footer(), 
+            
+
             bg=rx.color(color, 2),
             width="100%",
-            height="100%"
             ),
           
 

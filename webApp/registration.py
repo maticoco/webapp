@@ -1,6 +1,6 @@
 import reflex as rx
 from .components.components import singup_component
-from .styles.styles import Size
+from .styles.styles import Spacer
 from .repository.registration import RegistrationState
 
 from .routes import REGISTER_ROUTE

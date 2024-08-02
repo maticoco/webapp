@@ -3,30 +3,28 @@ from enum import Enum
 
 color = "orange"
 accent_color = "amber"
-
+MAX_WIGHT= "600px"
 
 style=theme=rx.theme(
         appearance="light",
         has_background=True,
         radius="large",
         accent_color=accent_color,
-        
     )
 
-class Size(Enum):
+class Spacer(Enum):
     SMALL="0.5em"
     DEFAULT="1em"
-    TITLE="1.5em"
     BIG="2em"
     SUPERBIG="5em"
     IMGBIG="15em"
 
 button_title_style = dict(
-    font_size = Size.TITLE.value
+    font_size = Spacer.DEFAULT.value
 )
 
 button_body_style = dict(
-    font_size = Size.DEFAULT.value
+    font_size = Spacer.DEFAULT.value
 )
 
 
@@ -84,7 +82,7 @@ component_styles = {
 
         "text_decoration": "none",
         "_hover": {
-            "text_decoration": "none",   
+            "text_decoration": "underline",
         },
     },
 }
