@@ -4,3 +4,4 @@
 uploaded_files
 __pycache__/
 venv
+*.exe
