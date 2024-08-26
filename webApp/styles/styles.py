@@ -10,6 +10,7 @@ style=theme=rx.theme(
         has_background=True,
         radius="large",
         accent_color=accent_color,
+        scaling="100%"
         
     )
 
@@ -87,4 +88,10 @@ component_styles = {
             "text_decoration": "none",   
         },
     },
+}
+style_notify = {
+    'position': 'fixed',
+    'top': '0px',
+    'right': '0px',
+    'margin': '10px 10px'
 }

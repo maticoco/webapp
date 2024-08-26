@@ -2,14 +2,17 @@ import reflex as rx
 from pathlib import Path
 from typing import List
 from ..scripts.seedkey_95320 import find_fazit, find_keys, find_pin, find_vin, find_dash_model, find_mac, find_eeprom_key, forzar_seed
+from ..scripts.pincode_bcm_celta import find_pin_v2,find_vin_v2
 from ..scripts.read_write_exctract_files import read_file
 from ..scripts.airbags import compare_bin_files, apply_diff_to_bin
-
+from ..scripts.cstowords import show_words
+from ..modules.process_list import PROCESS1,PROCESS2,PROCESS3
 
 
 class UploadState(rx.State):
     """The app state."""
     show_download_button = False
+    show_checkbox = False
     process: str = ""
     uploaded_file: Path = None
     decoded_data: str = ""
@@ -37,10 +40,27 @@ class UploadState(rx.State):
 
             # Update the uploaded file and process it
             self.uploaded_file = outfile            
-            if self.process == "GOL G6 MM95320":
+            if self.process == PROCESS2:
                 self.process_file_mm95320()
-            elif self.process == "AIRBAG":
+    
+            elif self.process == PROCESS1:
                 self.process_uploaded_airbags()
+
+            elif self.process == PROCESS3:
+                self.process_file_bcm_celta()
+
+    def process_file_bcm_celta(self):
+        if self.uploaded_file:
+            data = read_file(self.uploaded_file)
+            
+            # Procesar el archivo con las funciones de Seedkey
+            pin = find_pin_v2(data)
+            vin = find_vin_v2(data)
+        
+            # Crear el resultado final
+            self.decoded_data = (
+                f"\n{pin}\n{vin}\n"
+            )
     
     def process_file_mm95320(self):
         if self.uploaded_file:
@@ -55,11 +75,18 @@ class UploadState(rx.State):
             mac = find_mac(data)
             eeprom_key = find_eeprom_key(data)
             seed_result, seed_key = forzar_seed(data)
+            if seed_result is not None:
+                words=show_words(seed_result[0:24])
+                # Crear el resultado final
+                self.decoded_data = (
+                    f"{fazit}\n{keys}\n{pin}\n{vin}\n{dash_model}\n{mac}\nEEPROM Key: {eeprom_key}\nCS: {seed_result.upper()}\nSeed Key: {seed_key.upper()}\n\n WORDS:\n {words.upper()}"
+                )
+            else:
+                # Crear el resultado final
+                self.decoded_data = (
+                    f"{fazit}\n{keys}\n{pin}\n{vin}\n{dash_model}\n{mac}\nEEPROM Key: {eeprom_key}\nCS: {seed_result}\nSeed Key: {seed_key}\n\n"
+                )
 
-            # Crear el resultado final
-            self.decoded_data = (
-                f"{fazit}\n{keys}\n{pin}\n{vin}\n{dash_model}\n{mac}\nEEPROM Key: {eeprom_key}\nCS: {seed_result.upper()}\nSeed Key: {seed_key.upper()}"
-            )
     
     def process_uploaded_airbags(self):
         if self.uploaded_file:

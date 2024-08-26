@@ -1,8 +1,8 @@
 import reflex as rx
-from .repository.base_state import State
-from .repository.login_state import require_login, LoginState
-from .routes import LOGIN_ROUTE
-from .components.components import login_component
+from ..repository.base_state import State
+from ..repository.login_state import require_login, LoginState
+from ..routes import LOGIN_ROUTE
+from ..components.components import login_component
 
 
 

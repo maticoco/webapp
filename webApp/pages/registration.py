@@ -1,9 +1,9 @@
 import reflex as rx
-from .components.components import singup_component
-from .styles.styles import Size
-from .repository.registration import RegistrationState
+from ..components.components import singup_component
+from ..styles.styles import Size
+from ..repository.registration import RegistrationState
 
-from .routes import REGISTER_ROUTE
+from ..routes import REGISTER_ROUTE
 
 @rx.page(route=REGISTER_ROUTE)
 def registration_page() -> rx.Component:

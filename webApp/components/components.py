@@ -1,13 +1,13 @@
 import reflex as rx
 from reflex.style import toggle_color_mode
-
+from ..styles.styles import style_notify,Size
 from ..repository.base_state import State
 from ..repository.registration import RegistrationState
 from ..repository.upload_state import UploadState
 from ..repository.login_state import require_login, LoginState
 from ..repository.users_state import UserState
-from ..routes import GOLMM_ROUTE, LOGIN_ROUTE , REGISTER_ROUTE, AIRBAG_00521545140, AIRBAG_TRW_51957878
-from ..modules.module_img_list  import  DASH1,AIRBAG1,AIRBAG2
+from ..routes import GOLMM_ROUTE, LOGIN_ROUTE , REGISTER_ROUTE, AIRBAG_00521545140, AIRBAG_TRW_51957878,AIRBAG_VW_SIEMENS_1C0909601C,AIRBAG_AUTOLIV_62XXXXXXX,CELTA_BCM_PINCODE
+from ..modules.module_img_list  import  DASH1,AIRBAG1,AIRBAG2,AIRBAG3,AIRBAG4,BCM1                                                                              
 from ..model.user import User
 from ..model.auth_session import AuthSession
 
@@ -78,7 +78,7 @@ def navbar_user() -> rx.Component:
                                 rx.spacer(),
                                 username(),
                                 user_menu(),
-                                login_menu_movile(),
+                                menu_movile(),
                                 padding=Size.SMALL.value
                                 ),
                         justify="between",
@@ -114,13 +114,16 @@ def username()-> rx.Component:
                     )
 
 def image_component()-> rx.Component:
-    return rx.flex(
+    return rx.flex(rx.scroll_area(
             rx.image(src='/background.jpg',padding=Size.BIG.value),
             width="100%",
             height="100%",
             direction="column",
             align="center",
             justify="center",            
+            ),
+            width="100%",
+            style={"height": "100%"},
             )
 
 def footer_item(text: str, href: str) -> rx.Component:
@@ -190,9 +193,10 @@ def footer() -> rx.Component:
                             ),
                             
                             width="100%",
+                            height="100%",
                             padding="1em",
                             bg=rx.color(color, 3),
-                            justify="end",
+                            
                             
                             )
 
@@ -285,8 +289,10 @@ def user_menu() -> rx.Component:
                     )
                 ),
                 rx.menu.content(
-                    rx.menu.item("Settings"),
-                    rx.menu.item("Earnings"),
+                    rx.cond(State.is_authenticated == False,
+                    rx.menu.item("Log in",on_click=rx.redirect(LOGIN_ROUTE))),
+                    rx.cond(State.is_authenticated == False,
+                    rx.menu.item("Sign up",on_click=rx.redirect(REGISTER_ROUTE))),
                     rx.menu.separator(),
                     rx.menu.item("Log out",on_click=State.do_logout),
                     bg=rx.color(color, 2),
@@ -294,14 +300,16 @@ def user_menu() -> rx.Component:
                 justify="end",
             ),
           
-def login_menu_movile() -> rx.Component:
+def menu_movile() -> rx.Component:
     return  rx.menu.root(
                     rx.menu.trigger(
                         rx.icon("menu", size=30)
                     ),
                     rx.menu.content(
-                        rx.menu.item("Log in",on_click=rx.redirect(LOGIN_ROUTE)),
-                        rx.menu.item("Sign up",on_click=rx.redirect(REGISTER_ROUTE)),
+                        rx.menu.item("Home",on_click=rx.redirect("/#")),
+                        rx.menu.item("Sobre Nosotros",on_click=rx.redirect("/about")),
+                        rx.menu.item("Calculadoras",on_click=rx.redirect("/calcs")),
+                        rx.menu.item("Contacto",on_click=rx.redirect("/#")),
                     ),
                     justify="end",
                 )
@@ -321,16 +329,32 @@ def login_menu_desktop() -> rx.Component:
                 ),
 
 def cards_grid()->rx.Component:
-    return rx.grid(
+    return rx.box(
+                rx.scroll_area(
+                rx.grid(
                 cards_modules(img=DASH1,text="Gol G6 ",strong="Magnetti Marelli Nec + 95320",route=GOLMM_ROUTE),
-                cards_modules(img=AIRBAG1,text="FIAT Cronos/Argo/Strada 2023-> ",strong="MOPA A3C07434303 0052154140", route=AIRBAG_00521545140),
+                cards_modules(img=AIRBAG1,text="FIAT Cronos/Argo/Strada 2023-> ",strong="MOPAR A3C07434303 0052154140", route=AIRBAG_00521545140),
                 cards_modules(img=AIRBAG2,text="FIAT Palio/Siena/Strada Novo >2013-2018< ",strong="TRW 00051957878", route=AIRBAG_TRW_51957878),
+                cards_modules(img=AIRBAG3,text="VW Suran/Fox >2005-2011< ",strong="SIEMENS_1C0909601C", route=AIRBAG_VW_SIEMENS_1C0909601C),
+                cards_modules(img=AIRBAG4,text="Peugeot 308/408 >2011-2015< ",strong="AUTOLIV 6202260800", route=AIRBAG_AUTOLIV_62XXXXXXX),
+                cards_modules(img=BCM1,text="Chevrolet Celta Pincode remote >2010-2015< ",strong="GM 52034351 -> 9S12256", route=CELTA_BCM_PINCODE),
+                # spacing="4",
+                # columns="3",
+                # gap="1rem",
+                # width= "100%",
+                
                 gap="1rem",
-                columns="3",
-                width= "100%",
-                height="43em",
-                padding_x="20em",
-                padding_y="2em"
+                grid_template_columns=[
+                    "1fr",
+                    "repeat(2, 1fr)",
+                    "repeat(2, 1fr)",
+                    "repeat(3, 1fr)",
+                    "repeat(4, 1fr)",
+                ],
+                width="100%",
+                ),
+                
+                )
                 
             )
 
@@ -476,33 +500,17 @@ def about_component()-> rx.Component:
     return rx.scroll_area(
                 rx.flex(
                     rx.text(
-                        """Three fundamental aspects of typography are legibility, readability, and
-                    aesthetics. Although in a non-technical sense “legible” and “readable”
-                    are often used synonymously, typographically they are separate but
-                    related concepts.""",
-                    ),
-                    rx.text(
-                        """Legibility describes how easily individual characters can be
-                    distinguished from one another. It is described by Walter Tracy as “the
-                    quality of being decipherable and recognisable”. For instance, if a “b”
-                    and an “h”, or a “3” and an “8”, are difficult to distinguish at small
-                    sizes, this is a problem of legibility.""",
-                    ),
-                    rx.text(
-                        """Typographers are concerned with legibility insofar as it is their job to
-                    select the correct font to use. Brush Script is an example of a font
-                    containing many characters that might be difficult to distinguish. The
-                    selection of cases influences the legibility of typography because using
-                    only uppercase letters (all-caps) reduces legibility.""",
+                        """Con más de 30 años de experiencia, nuestra empresa comenzó en 1994 como una pequeña cerrajería.
+                          A lo largo del tiempo, hemos evolucionado para adaptarnos a los cambios en el sector automotor, invertiendo en tecnología y capacitación para ofrecer servicios de corte de llaves, sistemas inmobilizadores, inyección electrónica, airbag, ABS y tableros digitales, así como programación. Contamos con herramientas de última generación para asegurar la precisión y eficiencia en nuestros trabajos. Nuestra meta ha sido siempre trabajar de manera responsable y brindar resultados de alta calidad. Agradecemos el apoyo de nuestros clientes y seguimos comprometidos con nuestra visión de principio.""",
                     ),
                     direction="column",
-                    spacing="4",
-                    padding="10em"
+                    spacing="6",
+                    padding=Size.SUPERBIG.value
                     
                 ),
                 type="always",
                 scrollbars="vertical",
-                style={"height": 720},
+                style={"height": "100%"},
                 
             )
 
@@ -527,9 +535,10 @@ def upload() -> rx.Component:
 
 def result_card() -> rx.Component:
     return rx.card(
+        rx.scroll_area(
         rx.image(src=UploadState.img),
         rx.text(UploadState.decoded_data,white_space="pre"),
-        
+        ),
         size="5",
         border=f"1px solid {color}",
         width="100%",
@@ -645,6 +654,7 @@ def login_component() -> rx.Component:
 
 def clear_card() -> rx.Component:
     return rx.card(
+        rx.scroll_area(
         rx.text(UploadState.decoded_data),
         rx.text(UploadState.modified_filename),
         rx.image(src=UploadState.img),
@@ -654,9 +664,11 @@ def clear_card() -> rx.Component:
                 "Descargar archivo modificado", 
                 on_click=rx.download(rx.get_upload_url(UploadState.modified_filename))
             ),
-            rx.text(f"Cargue aqui el dataflash del RENESSAS R7f7010183")
+            rx.text(f"Cargue aqui el DUMP")
             
+            ),
         ),
+        padding=Size.BIG.value,
         size="5",
         border=f"1px solid {color}",
         width="100%",
@@ -768,4 +780,12 @@ def delete_user_dialogo_component(username: str) -> rx.Component:
                 justify='end',
             )
         )
+    )
+
+def notify_component(message: str, icon_notify: str, color: str) -> rx.Component:
+    return rx.callout(
+        message,
+        icon=icon_notify,
+        style=style_notify,
+        color_scheme=color
     )

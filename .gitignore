@@ -1,7 +1,8 @@
 *.db
+*.exe
 *.py[cod]
 .web
-uploaded_files
+.env
 __pycache__/
+uploaded_files
 venv
-*.exe

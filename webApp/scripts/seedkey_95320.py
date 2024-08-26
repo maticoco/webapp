@@ -7,13 +7,18 @@ def extract_bytes_from_address(data, address, bytes_per_line=16):
     start = int(address, 16)  # Convertir la dirección hexadecimal a un entero
     return data[start:start+bytes_per_line]
 
+def safe_decode(data, encoding='utf-8'):
+    try:
+        return data.decode(encoding)
+    except UnicodeDecodeError:
+        return data.decode(encoding, errors='replace')  # Reemplaza caracteres no decodificables
 
 def find_fazit(data):
     fazit1 = extract_bytes_from_address(data, "b0")
     fazit2 = extract_bytes_from_address(data, "c0")
     fazit3 = extract_bytes_from_address(data, "5c0")
-    print ('FAZIT: ',fazit3[0:9].decode('utf-8'),fazit1.decode('utf-8')+fazit2[0:6].decode('utf-8'),fazit2[8:16].decode('utf-8'))
-    fazit='FAZIT: '+ fazit3[0:9].decode('utf-8')+fazit1.decode('utf-8')+fazit2[0:6].decode('utf-8')+fazit2[8:16].decode('utf-8')
+    fazit='FAZIT: '+ safe_decode(fazit3[0:9])+safe_decode(fazit1) + safe_decode(fazit2[0:6])+safe_decode(fazit2[8:16])
+    print(fazit)
     return fazit
 
 def find_keys(data):
@@ -21,9 +26,9 @@ def find_keys(data):
     keys2 = extract_bytes_from_address(data, "4A0").hex()
     keys3 = extract_bytes_from_address(data, "4A0").hex()
     
-    keys=f'KEY 1: {keys1[8:16].upper()}\nKEY 2: {keys1[16:24].upper()}\nKEY 3: {keys1[24:32].upper()}\n'
-    keys+=f'KEY 4: {keys2[0:8].upper()}\nKEY 5: {keys2[8:16].upper()}\nKEY 6: {keys2[16:24].upper()}\nKEY 7: {keys2[24:32].upper()}\n'
-    keys+=f'KEY 8: {keys3[0:8].upper()}'
+    keys=f'KEY 1: {reverse_bytes_hex(keys1[8:16]).upper()}\nKEY 2: {reverse_bytes_hex(keys1[16:24]).upper()}\nKEY 3: {reverse_bytes_hex(keys1[24:32]).upper()}\n'
+    keys+=f'KEY 4: {reverse_bytes_hex(keys2[0:8]).upper()}\nKEY 5: {reverse_bytes_hex(keys2[8:16]).upper()}\nKEY 6: {reverse_bytes_hex(keys2[16:24]).upper()}\nKEY 7: {reverse_bytes_hex(keys2[24:32]).upper()}\n'
+    keys+=f'KEY 8: {reverse_bytes_hex(keys3[0:8]).upper()}'
     return keys
 
 def find_pin(data):
@@ -58,7 +63,6 @@ def find_eeprom_key(data):
     #print(invert_bits_hex(reverse_bytes_hex(linea5c0[0:16])))
     linea5c0 = extract_bytes_from_address(data, "5c0").hex()
     eeprom_key=linea5c0[6:18]+invert_bits_hex(reverse_bytes_hex(linea5c0[0:16]))
-    print (invert_bits_hex(linea5c0[0:16]))
     return eeprom_key
 
 def invert_bits_hex(hex_value: str) -> str:
@@ -131,18 +135,15 @@ def desencriptar_aes_ecb(ciphertext_hex: str, seed_key_hex: str) -> str:
     return hexlify(plaintext).decode()
 
 def forzar_seed(data):
-    
     ciphertext_hex = extract_bytes_from_address(data, "440").hex()
-    eeprom_key= find_eeprom_key(data)
-    for i in range(1,65536):
-    
+    eeprom_key = find_eeprom_key(data)
+    for i in range(1, 65536):
         hex_value = format(i, '04X')
         seed_key_hex = hex_value + eeprom_key
         resultado = desencriptar_aes_ecb(ciphertext_hex, seed_key_hex)
         if "00000000" in resultado[24:32]:
-            
-            return resultado,seed_key_hex
-
+            return resultado, seed_key_hex
+    return None, None  # En caso de no encontrar resultados
 
 
 
