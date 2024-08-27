@@ -1,8 +1,9 @@
-
+*.db
 *.exe
 *.py[cod]
-.web
 .env
+.web
 __pycache__/
+assets/external/
 uploaded_files
 venv

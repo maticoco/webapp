@@ -110,9 +110,17 @@ class UploadState(rx.State):
                 self.decoded_data = str(e)
     
     def set_config(self, process: str , module: str, img: str):
+        self.clear_decoded_data()
         self.process = process
         self.module = module
         self.img = img
+
+
+    def clear_decoded_data(self):
+        self.decoded_data =""
+        self.uploaded_file=None
+        self.modified_filename=None
+        self.show_download_button=False
 
    
     

@@ -338,9 +338,10 @@ def cards_grid()->rx.Component:
                 cards_modules(img=AIRBAG3,text="VW Suran/Fox >2005-2011< ",strong="SIEMENS_1C0909601C", route=AIRBAG_VW_SIEMENS_1C0909601C),
                 cards_modules(img=AIRBAG4,text="Peugeot 308/408 >2011-2015< ",strong="AUTOLIV 6202260800", route=AIRBAG_AUTOLIV_62XXXXXXX),
                 cards_modules(img=BCM1,text="Chevrolet Celta Pincode remote >2010-2015< ",strong="GM 52034351 -> 9S12256", route=CELTA_BCM_PINCODE),
+                
                 # spacing="4",
                 # columns="3",
-                # gap="1rem",
+                
                 # width= "100%",
                 
                 gap="1rem",
@@ -351,6 +352,7 @@ def cards_grid()->rx.Component:
                     "repeat(3, 1fr)",
                     "repeat(4, 1fr)",
                 ],
+                
                 width="100%",
                 ),
                 
@@ -519,7 +521,7 @@ def upload() -> rx.Component:
         rx.upload(
             rx.vstack(
                 rx.button("Select File", color=color, bg="white", border=f"1px solid {color}"),
-                rx.text("Drag and drop files here or click to select files"),
+                rx.text("Drag and drop files here or click to select files"),align="center",justify="center"
             ),
             id="upload2",
             multiple=False,
