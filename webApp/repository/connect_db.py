@@ -21,5 +21,5 @@ INSTANCE_CONNECTION_NAME = f"{project_id}:{db_region}:{db_instance}" # i.e demo-
 
 def connect():
     #engine=create_engine("dialect[+driver]://user:password@host/dbname")
-    engine=create_engine(f"mysql+pymysql://{db_user}:{db_password}@localhost:3306/{db_name}")
+    engine=create_engine(f"sqlite:///reflex.db")
     return engine

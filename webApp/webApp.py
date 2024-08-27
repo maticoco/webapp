@@ -1,6 +1,6 @@
 """Welcome to Reflex! This file outlines the steps to create a basic app."""
 
-from rxconfig import config
+from rxconfig_1 import config
 import reflex as rx
 from .components.components import navbar_user, image_component,footer 
 from .styles.styles import color , accent_color,style
