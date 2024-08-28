@@ -2,7 +2,7 @@ import reflex as rx
 
 config = rx.Config(
     app_name="webApp",
-    #api_url="https://52.41.36.82:8000",
+    api_url="https://webapp-tx8w.onrender.com/",
     db_url="sqlite:///reflex.db",
     
 )
