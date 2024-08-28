@@ -19,4 +19,4 @@ RUN reflex export --frontend-only --no-zip
 STOPSIGNAL SIGKILL
 
 # Always apply migrations before starting the backend.
-CMD [ -d alembic ] && reflex db migrate; reflex run --backend-only --env prod
+CMD [ -d alembic ] && reflex db migrate; reflex run --backend-only
