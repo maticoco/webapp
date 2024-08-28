@@ -18,7 +18,7 @@ def find_fazit(data):
     fazit2 = extract_bytes_from_address(data, "c0")
     fazit3 = extract_bytes_from_address(data, "5c0")
     fazit='FAZIT: '+ safe_decode(fazit3[0:9])+safe_decode(fazit1) + safe_decode(fazit2[0:6])+safe_decode(fazit2[8:16])
-    print(fazit)
+    #print(fazit)
     return fazit
 
 def find_keys(data):
