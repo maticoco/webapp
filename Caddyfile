@@ -1,14 +1,11 @@
-{$DOMAIN}
+cerrajerialjr.pages.dev {
+    encode gzip
 
-encode gzip
+    @backend_routes path /_event/* /ping /_upload /_upload/*
+    handle @backend_routes {
+        reverse_proxy app:8000
+    }
 
-@backend_routes path /_event/* /ping /_upload /_upload/*
-handle @backend_routes {
-    reverse_proxy app:8000
-}
-
-root * /srv
-route {
-    try_files {path} {path}/ /index.html
+    root * /srv
     file_server
 }
