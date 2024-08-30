@@ -7,13 +7,13 @@ services:
       DB_URL: sqlite:///data/reflex.db
     build:
       context: .
-      dockerfile: prod.Dockerfile
+      dockerfile: Dockerfile
     volumes:
        - db-data:/app/data
        - upload-data:/app/uploaded_files
     ports:
-      - "8000:8000"  # Exponiendo el puerto 8000 para el backend
-      - "3000:3000"  # Exponiendo el puerto 3000 para el frontend
+      - "8000:8000"
+      - "3000:3000"
     restart: always
 
   webserver:
@@ -21,7 +21,7 @@ services:
       DOMAIN: ${DOMAIN:-localhost}
     ports:
       - 443:443
-      - 80:80  # For acme-challenge via HTTP.
+      - 80:80
     build:
       context: .
       dockerfile: Caddy.Dockerfile
@@ -32,10 +32,6 @@ services:
       - app
 
 volumes:
-  # SQLite data
   db-data:
-  # Uploaded files
   upload-data:
-  # TLS keys and certificates
   caddy-data:
-

@@ -1,21 +1,34 @@
-# This Dockerfile is used to deploy a simple single-container Reflex app instance.
+# This Dockerfile is used to deploy a single-container Reflex app instance.
 FROM python:3.11
 
-# Copy local context to `/app` inside container (see .dockerignore)
+# Set environment variables
+ENV PYTHONUNBUFFERED=1
+ENV PATH="/app/.venv/bin:$PATH"
+
+# Set the working directory
 WORKDIR /app
+
+# Install app dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the application files
 COPY . .
 
-# Install app requirements and reflex in the container
-RUN pip install -r requirements.txt
+# Ensure the necessary directories exist
+RUN mkdir -p /app/.local/share/reflex
 
-# Deploy templates and prepare app
+# Initialize the application
 RUN reflex init
 
-# Download all npm dependencies and compile frontend
+# Build the frontend only
 RUN reflex export --frontend-only --no-zip
 
-# Needed until Reflex properly passes SIGTERM on backend.
-STOPSIGNAL SIGKILL
+# Ensure correct permissions for the application directory
+RUN chown -R root:root /app
 
-# Always apply migrations before starting the backend.
+# Expose necessary ports
+EXPOSE 8000 3000
+
+# Run the backend only
 CMD [ -d alembic ] && reflex db migrate; reflex run --backend-only

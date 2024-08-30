@@ -48,4 +48,4 @@ ENV PATH="/app/.venv/bin:$PATH"
 STOPSIGNAL SIGKILL
 
 # Always apply migrations before starting the backend.
-CMD reflex db migrate && reflex run --env prod --backend-only
+CMD reflex db migrate && reflex run --env prod 
