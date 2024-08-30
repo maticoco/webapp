@@ -1,10 +1,5 @@
-# Base compose file production deployment of reflex app with Caddy webserver
-# providing TLS termination and reverse proxying.
-#
-# See `compose.prod.yaml` for more robust and performant deployment option.
-#
-# During build and run, set environment DOMAIN pointing
-# to publicly accessible domain where app will be hosted
+version: '3.8'
+
 services:
   app:
     image: local/reflex-app
@@ -16,6 +11,9 @@ services:
     volumes:
        - db-data:/app/data
        - upload-data:/app/uploaded_files
+    ports:
+      - "8000:8000"  # Exponiendo el puerto 8000 para el backend
+      - "3000:3000"  # Exponiendo el puerto 3000 para el frontend
     restart: always
 
   webserver:
@@ -40,3 +38,4 @@ volumes:
   upload-data:
   # TLS keys and certificates
   caddy-data:
+
