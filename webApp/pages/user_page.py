@@ -5,8 +5,11 @@ from ..service.user_service import select_all_user_service, select_user_by_usern
 import asyncio
 from ..components.components import create_user_dialogo_componenet, search_user_component,table_user, notify_component
 from ..repository.users_state import UserState
+from ..repository.login_state import require_login
 
 @rx.page(route='/users', title="user", on_load=UserState.get_all_user)
+
+@require_login
 def user_page() -> rx.Component:
     return  rx.flex(
         rx.heading('Usuarios', align='center'),

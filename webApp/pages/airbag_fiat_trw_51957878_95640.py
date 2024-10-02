@@ -13,7 +13,7 @@ from ..modules.module_img_list import AIRBAG2
          title="Airbags Fiat Palio Siena Strada TRW 51957878", 
          on_load=UploadState.set_config(PROCESS1,MODULE2,AIRBAG2)
          )
-
+@require_login
 def airbag_fiat_trw_51957878_95640() -> rx.Component:
     return rx.box(
         navbar_user(),

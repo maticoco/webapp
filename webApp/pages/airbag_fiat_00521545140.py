@@ -12,7 +12,7 @@ from ..modules.module_img_list import AIRBAG1
          title="Airbags Fiat Argo Cronos Strada AIRBAG_00521545140", 
          on_load=UploadState.set_config(PROCESS1,MODULE1,AIRBAG1)
          )
-
+@require_login
 def fiat_airbag_00521545140() -> rx.Component:
     return rx.box(
         navbar_user(),

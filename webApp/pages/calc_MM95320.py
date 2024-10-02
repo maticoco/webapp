@@ -16,7 +16,7 @@ from ..modules.module_img_list import DASH1
          )
 
 
-
+@require_login
 def calc_mm95320() -> rx.Component:
     
     return rx.box(            

@@ -41,8 +41,9 @@ def navbar_user() -> rx.Component:
                         rx.hstack(
                             navbar_link("Home", "/#"),
                             navbar_link("Sobre Nosotros", "/about"),
-                            navbar_link("Calculadoras", "/calcs"),
-                            navbar_link("Contacto", "/#"),
+                            rx.cond(State.is_authenticated == True,
+                            navbar_link("Calculadoras", "/calcs")),
+                            navbar_link("Contacto", "/contact"),
                             spacing="5",
                             justify="between" 
                             ),
@@ -90,6 +91,7 @@ def navbar_user() -> rx.Component:
                 position= "sticky",
                 width="100%",
                 z_index="200",
+                max_height="25vh"
             )
 
 def heading_component()-> rx.Component:
@@ -113,18 +115,28 @@ def username()-> rx.Component:
                     State.authenticated_user.username, size="7", weight="bold",color_scheme=color
                     )
 
-def image_component()-> rx.Component:
-    return rx.flex(rx.scroll_area(
-            rx.image(src='/background.jpg',padding=Size.BIG.value),
-            width="100%",
-            height="100%",
-            direction="column",
-            align="center",
-            justify="center",            
-            ),
-            width="100%",
-            style={"height": "100%"},
-            )
+def image_component() -> rx.Component:
+    return rx.image(
+            src='/background.jpg',
+            object_fit="contain",  # Mantiene la proporción de la imagen
+            object_position="center",  # Centra la imagen dentro del contenedor
+            max_width="100%",  # Evita que la imagen se desborde horizontalmente
+            max_height="60vh",  # Evita que la imagen se desborde verticalmente
+            display="block",  # Permite centrar la imagen dentro del contenedor flex
+            margin="auto",  # Centra la imagen dentro del contenedor
+         ),
+    #     display="flex",  # Flex para centrar el contenedor principal
+    #     justify_content="center",  # Centra el contenedor horizontalmente
+    #     align_items="center",  # Centra el contenedor verticalmente
+    #     width="100%",  # Contenedor toma todo el ancho disponible
+    #     height="70vh",  # Altura adaptable
+    #     max_width=Size.SLIDERDESKTOP.value,  # Tamaño máximo para desktop
+    #     overflow="hidden",  # Oculta cualquier desbordamiento de la imagen
+    #     padding=Size.BIG.value,
+    # )
+
+
+
 
 def footer_item(text: str, href: str) -> rx.Component:
     return rx.link(rx.text(text, size="3"), href=href)
@@ -196,6 +208,7 @@ def footer() -> rx.Component:
                             height="100%",
                             padding="1em",
                             bg=rx.color(color, 3),
+                            max_height="15vh"
                             
                             
                             )
@@ -291,8 +304,8 @@ def user_menu() -> rx.Component:
                 rx.menu.content(
                     rx.cond(State.is_authenticated == False,
                     rx.menu.item("Log in",on_click=rx.redirect(LOGIN_ROUTE))),
-                    rx.cond(State.is_authenticated == False,
-                    rx.menu.item("Sign up",on_click=rx.redirect(REGISTER_ROUTE))),
+                    # rx.cond(State.is_authenticated == False,
+                    # rx.menu.item("Sign up",on_click=rx.redirect(REGISTER_ROUTE))),
                     rx.menu.separator(),
                     rx.menu.item("Log out",on_click=State.do_logout),
                     bg=rx.color(color, 2),
@@ -308,20 +321,21 @@ def menu_movile() -> rx.Component:
                     rx.menu.content(
                         rx.menu.item("Home",on_click=rx.redirect("/#")),
                         rx.menu.item("Sobre Nosotros",on_click=rx.redirect("/about")),
-                        rx.menu.item("Calculadoras",on_click=rx.redirect("/calcs")),
-                        rx.menu.item("Contacto",on_click=rx.redirect("/#")),
+                        rx.cond(State.is_authenticated == True,
+                        rx.menu.item("Calculadoras",on_click=rx.redirect("/calcs"))),
+                        rx.menu.item("Contacto",on_click=rx.redirect("/contact")),
                     ),
                     justify="end",
                 )
 
 def login_menu_desktop() -> rx.Component:
     return  rx.hstack(
-                    rx.button(
-                        "Sign Up",
-                        size="3",
-                        variant="outline",
-                        on_click=rx.redirect(REGISTER_ROUTE)
-                    ),
+                    # rx.button(
+                    #     "Sign Up",
+                    #     size="3",
+                    #     variant="outline",
+                    #     on_click=rx.redirect(REGISTER_ROUTE)
+                    # ),
                     
                     rx.button("Log In", size="3",on_click=rx.redirect(LOGIN_ROUTE)),
                     spacing="4",
@@ -498,23 +512,36 @@ def singup_component() -> rx.Component:
         
     )
 
-def about_component()-> rx.Component:
-    return rx.scroll_area(
-                rx.flex(
-                    rx.text(
-                        """Con más de 30 años de experiencia, nuestra empresa comenzó en 1994 como una pequeña cerrajería.
-                          A lo largo del tiempo, hemos evolucionado para adaptarnos a los cambios en el sector automotor, invertiendo en tecnología y capacitación para ofrecer servicios de corte de llaves, sistemas inmobilizadores, inyección electrónica, airbag, ABS y tableros digitales, así como programación. Contamos con herramientas de última generación para asegurar la precisión y eficiencia en nuestros trabajos. Nuestra meta ha sido siempre trabajar de manera responsable y brindar resultados de alta calidad. Agradecemos el apoyo de nuestros clientes y seguimos comprometidos con nuestra visión de principio.""",
-                    ),
-                    direction="column",
-                    spacing="6",
-                    padding=Size.SUPERBIG.value
-                    
-                ),
-                type="always",
-                scrollbars="vertical",
-                style={"height": "100%"},
-                
-            )
+def about_component() -> rx.Component:
+    return rx.flex(rx.card(
+        rx.spacer(),
+        rx.text(
+            """
+            Con más de 30 años de experiencia, nuestra empresa comenzó en 1994 como una pequeña cerrajería.
+            A lo largo del tiempo, hemos evolucionado para adaptarnos a los cambios en el sector automotor, 
+            invertiendo en tecnología y capacitación para ofrecer servicios de corte de llaves, 
+            sistemas inmobilizadores, inyección electrónica, airbag, ABS y tableros digitales, 
+            así como programación. Contamos con herramientas de última generación para asegurar la precisión 
+            y eficiencia en nuestros trabajos. Nuestra meta ha sido siempre trabajar de manera responsable y 
+            brindar resultados de alta calidad. Agradecemos el apoyo de nuestros clientes y 
+            seguimos comprometidos con nuestra visión de principio.
+            """,
+            text_align="center",  # Centrar el texto
+            font_size="1.2rem",  # Ajuste opcional del tamaño del texto
+        ),
+        rx.spacer(),
+        
+        
+        padding="2rem",  # Opcional, para añadir espacio alrededor del texto
+    ),
+    justify="center",
+            align="center",
+            width="100%",
+            height="100%",
+            padding_bottom="5rem",
+            padding_top="5rem",
+            
+        ),
 
 def upload() -> rx.Component:
     return rx.vstack(

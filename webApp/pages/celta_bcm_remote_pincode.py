@@ -16,7 +16,7 @@ from ..modules.module_img_list import BCM1
          )
 
 
-
+@require_login
 def celta_bcm_remote_pincode() -> rx.Component:
     
     return rx.box(            

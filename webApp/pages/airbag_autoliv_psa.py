@@ -13,7 +13,7 @@ from ..modules.module_img_list import AIRBAG4
          title="Airbags PSA Autoliv 95320", 
          on_load=UploadState.set_config(PROCESS1,MODULE4,AIRBAG4)
          )
-
+@require_login
 def airbag_psa_autoliv_95320() -> rx.Component:
     return rx.box(
         navbar_user(),

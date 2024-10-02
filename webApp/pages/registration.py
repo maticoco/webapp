@@ -1,11 +1,13 @@
 import reflex as rx
 from ..components.components import singup_component
 from ..styles.styles import Size
-from ..repository.registration import RegistrationState
+from ..repository.login_state import require_login
 
 from ..routes import REGISTER_ROUTE
 
 @rx.page(route=REGISTER_ROUTE)
+
+@require_login
 def registration_page() -> rx.Component:
     """Render the registration page.
 

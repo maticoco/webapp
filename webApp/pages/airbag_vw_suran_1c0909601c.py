@@ -13,7 +13,7 @@ from ..modules.module_img_list import AIRBAG3
          title="Airbags VW Suran Fox SIEMENS 1C0 909 601C", 
          on_load=UploadState.set_config(PROCESS1,MODULE3,AIRBAG3)
          )
-
+@require_login
 def airbag_vw_siemens_1c0909601c() -> rx.Component:
     return rx.box(
         navbar_user(),

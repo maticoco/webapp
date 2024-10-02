@@ -12,15 +12,23 @@ style=theme=rx.theme(
         accent_color=accent_color,
         scaling="100%"
         
+        
     )
 
 class Size(Enum):
-    SMALL="0.5em"
-    DEFAULT="1em"
-    TITLE="1.5em"
-    BIG="2em"
-    SUPERBIG="5em"
-    IMGBIG="15em"
+    SMALL = "0.5em"
+    DEFAULT = "1em"
+    TITLE = "1.5em"
+    BIG = "2em"
+    SUPERBIG = "5em"
+    CARDSIZE = "7em"
+    CALLOUTSIZE = "9em"
+    IMGBIG = "15em"
+    FORMCONTACT = "38em"
+    FORMCONTACTBIG = "88em"
+    SLIDERDESKTOP = "720px"  # Tamaño para desktop
+    SLIDERMOBILE = "300px"   # Tamaño más pequeño para mobile/tablet
+
 
 button_title_style = dict(
     font_size = Size.TITLE.value
@@ -31,13 +39,34 @@ button_body_style = dict(
 )
 
 
-# Definir los estilos globales
-global_styles = {
-    "font_family": "Arial, sans-serif",
-    "font_size": "16px",
-
-
+# Definir fuentes
+font_families = {
+    "body": "Roboto",       # Fuente para el texto general
+    "heading": "Poppins",   # Fuente para los encabezados
 }
+
+# Estilos generales
+global_styles = {
+    "font_family": font_families["body"],
+    "font_size": "16px",
+}
+
+# Estilos para las notificaciones
+style_notify_dark = {
+    'position': 'fixed',
+    'top': Size.CALLOUTSIZE.value,
+    'right': '20px',
+    'z-index': '10000',
+    'background-color': '#333',
+    'padding': '20px 30px',
+    'border-radius': '8px',
+    'border': '2px solid #555',
+    'box-shadow': '0 8px 16px rgba(0, 0, 0, 0.6)',
+    'font-family': font_families["body"],
+    'font-size': Size.DEFAULT.value,
+    'color': '#fff',
+}
+
 
 # Estilos para componentes específicos
 component_styles = {

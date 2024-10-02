@@ -9,3 +9,4 @@ from .pages.airbag_fiat_trw_51957878_95640 import airbag_fiat_trw_51957878_95640
 from .pages.airbag_vw_suran_1c0909601c import airbag_vw_siemens_1c0909601c
 from .pages.airbag_autoliv_psa import airbag_psa_autoliv_95320
 from .pages.celta_bcm_remote_pincode import celta_bcm_remote_pincode
+from .pages.contact import contact
