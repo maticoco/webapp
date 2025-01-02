@@ -17,8 +17,7 @@ RUN reflex init
 # Download all npm dependencies and compile frontend
 RUN reflex export --frontend-only --no-zip
 
-# Needed until Reflex properly passes SIGTERM on backend.
-STOPSIGNAL SIGKILL
+CMD ["reflex", "run", "--env", "prod", "--backend-only", "--loglevel", "debug"]
 
 # Always apply migrations before starting the backend.
 CMD [ -d alembic ] && reflex db migrate; \
