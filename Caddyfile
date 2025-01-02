@@ -1,16 +1,10 @@
-:80
+back.cerrajerialjr.com.ar
 
-root * /app/.web/_static
-file_server
+encode gzip
 
-@backend {
-    path /_event/*
-    path /ping
-    path /_upload/*
+@backend_routes path /_event/* /ping /_upload /_upload/*
+handle @backend_routes {
+	reverse_proxy localhost:8000
 }
-reverse_proxy @backend backend:8000
 
-reverse_proxy /graphql backend:8000 {
-    header_up Connection {>Connection}
-    header_up Upgrade {>Upgrade}
-}
+reverse_proxy localhost:3000
