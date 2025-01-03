@@ -23,4 +23,4 @@ STOPSIGNAL SIGKILL
 # Always apply migrations before starting the backend.
 CMD [ -d alembic ] && reflex db migrate; \
     redis-server --daemonize yes && \
-    exec reflex run --env prod
+    exec reflex run --env prod --backend-only
