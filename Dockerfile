@@ -1,5 +1,5 @@
 # This Dockerfile is used to deploy a simple single-container Reflex app instance.
-FROM python:3.13
+FROM python:3.11
 
 RUN apt-get update && apt-get install -y redis-server && rm -rf /var/lib/apt/lists/*
 ENV REDIS_URL=redis://localhost PYTHONUNBUFFERED=1
@@ -17,7 +17,8 @@ RUN reflex init
 # Download all npm dependencies and compile frontend
 RUN reflex export --frontend-only --no-zip
 
-CMD ["reflex", "run", "--env", "prod", "--backend-only", "--loglevel", "debug"]
+# Needed until Reflex properly passes SIGTERM on backend.
+STOPSIGNAL SIGKILL
 
 # Always apply migrations before starting the backend.
 CMD [ -d alembic ] && reflex db migrate; \
