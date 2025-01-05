@@ -1,12 +1,10 @@
-# Caddyfile
-
 :{$PORT}
 
 encode gzip
 
 @backend_routes path /_event/* /ping /_upload /_upload/*
 handle @backend_routes {
-	reverse_proxy back.cerrajerialjr.com.ar:8000
+	reverse_proxy localhost:8000
 }
 
 root * /srv
