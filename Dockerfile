@@ -12,7 +12,7 @@ FROM python:3.11
 ARG PORT=8080
 # Only set for local/direct access. When TLS is used, the API_URL is assumed to be the same as the frontend.
 ARG API_URL
-ENV PORT=$PORT API_URL=${API_URL:-http://localhost:$PORT} REDIS_URL=redis://localhost PYTHONUNBUFFERED=1
+ENV PORT=$PORT API_URL=${API_URL:-https://back.cerrajerialjr.com.ar:$PORT} REDIS_URL=redis://back.cerrajerialjr.com.ar PYTHONUNBUFFERED=1
 
 # Install Caddy and redis server inside image
 RUN apt-get update -y && apt-get install -y caddy redis-server && rm -rf /var/lib/apt/lists/*
