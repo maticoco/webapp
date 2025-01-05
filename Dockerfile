@@ -1,29 +1,34 @@
-# Dockerfile for Reflex Simple-Two-Port
-
-# Base image
+# This Dockerfile is used to deploy a single-container Reflex app instance.
 FROM python:3.11
 
-# Install Redis and required dependencies
-RUN apt-get update && apt-get install -y redis-server && rm -rf /var/lib/apt/lists/*
-ENV REDIS_URL=redis://localhost PYTHONUNBUFFERED=1
+# Set environment variables
+ENV PYTHONUNBUFFERED=1
+ENV PATH="/app/.venv/bin:$PATH"
 
-# Copy application files
+# Set the working directory
 WORKDIR /app
+
+# Install app dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the application files
 COPY . .
 
-# Install dependencies
-RUN pip install -r requirements.txt
+# Ensure the necessary directories exist
+RUN mkdir -p /app/.local/share/reflex
 
-# Initialize Reflex and prepare app
+# Initialize the application
 RUN reflex init
 
-# Build frontend
+# Build the frontend only
 RUN reflex export --frontend-only --no-zip
 
-# Handle signals properly
-STOPSIGNAL SIGKILL
+# Ensure correct permissions for the application directory
+RUN chown -R root:root /app
 
-# Apply migrations and start servers
-CMD [ -d alembic ] && reflex db migrate; \
-    redis-server --daemonize yes && \
-    exec reflex run --env prod
+# Expose necessary ports
+EXPOSE 8000 3000
+
+# Run the backend only
+CMD [ -d alembic ] && reflex db migrate; reflex run --backend-only

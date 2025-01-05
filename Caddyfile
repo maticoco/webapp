@@ -1,16 +1,11 @@
+cerrajerialjr.pages.dev {
+    encode gzip
 
-# Caddyfile Configuration
+    @backend_routes path /_event/* /ping /_upload /_upload/*
+    handle @backend_routes {
+        reverse_proxy app:8000
+    }
 
-cerrajerialjr.com.ar {
-
-encode gzip
-
-# Route backend requests
-@backend_routes path /_event/* /ping /_upload /_upload/*
-handle @backend_routes {
-	reverse_proxy localhost:8000
-}
-
-# Forward remaining requests to frontend
-reverse_proxy localhost:3000
+    root * /srv
+    file_server
 }
