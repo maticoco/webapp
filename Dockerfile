@@ -6,7 +6,7 @@
 # It uses a reverse proxy to serve the frontend statically and proxy to backend
 # from a single exposed port, expecting TLS termination to be handled at the
 # edge by the given platform.
-FROM python:3.13
+FROM python:3.11
 
 # If the service expects a different port, provide it here (f.e Render expects port 10000)
 ARG PORT=8080
