@@ -10,7 +10,7 @@ back.cerrajerialjr.com.ar {
     # Rutas para el backend (Uvicorn en el puerto 8000)
     @backend_routes path /admin* /ping /upload* /_event/*
     handle @backend_routes {
-        reverse_proxy https://back.cerrajerialjr.com.ar {
+        reverse_proxy https://back.cerrajerialjr.com.ar:8000 {
             # Manejar conexiones WebSocket para eventos en tiempo real.
             header_up Host {host}
             header_up Connection "Upgrade"
