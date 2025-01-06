@@ -21,7 +21,7 @@ config = rx.Config(
     cors_allowed_origins=["https://cerrajerialjr.com.ar"],
 
     # Configuración de Redis para manejar el estado en el backend.
-    redis_url="redis://localhost:6379",
+    #redis_url="redis://localhost:6379",
 
     # Tiempo de espera para solicitudes largas.
     timeout=120,
