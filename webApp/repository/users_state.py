@@ -10,12 +10,12 @@ class UserState(rx.State):
     user_search: str
     error: str = ''
 
-    @rx.background
+    @rx.event(background=True)
     async def get_all_user(self):
         async with self:
             self.users = select_all_user_service()
  
-    @rx.background
+    @rx.event(background=True)
     async def get_user_by_username(self):
         async with self:
             self.users = select_user_by_username_service(self.user_search)
@@ -27,7 +27,7 @@ class UserState(rx.State):
             await asyncio.sleep(2)
             self.error = ''
 
-    @rx.background
+    @rx.event(background=True)
     async def create_user(self, data: dict):
         async with self:
             try:
@@ -38,7 +38,7 @@ class UserState(rx.State):
                 self.error = be.args
         await self.handleNotify()
 
-    @rx.background
+    @rx.event(background=True)
     async def delete_user(self, email):
         async with self:
             self.users = delete_user_service(email)

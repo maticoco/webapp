@@ -3,7 +3,7 @@
 
 import reflex as rx
 from .components.components import navbar_user, image_component,footer
-from .components.whatsapp_button import whatsapp_button 
+#from .components.whatsapp_button import whatsapp_button 
 from .styles.styles import color , accent_color,style
 
 def index():
@@ -11,7 +11,7 @@ def index():
     return  rx.vstack(
             navbar_user(),           
             image_component(),
-            whatsapp_button(),
+            #whatsapp_button(),
             footer(),    
             bg=rx.color(color, 2),
             width="100%",
