@@ -1,40 +1,37 @@
 {
-    # Habilitar logs detallados para depuración.
+    # Habilitar logs para depurar.
     debug
 }
 
-# Dominio para el backend (FastAPI en Render)
+# Backend en Render (FastAPI + Reflex Backend)
 back.cerrajerialjr.com.ar {
     encode gzip
 
-    # Rutas para el backend (Uvicorn en el puerto 8000)
     @backend_routes path /admin* /ping /upload* /_event/*
     handle @backend_routes {
-        reverse_proxy https://back.cerrajerialjr.com.ar:8000 {
-            # Manejar conexiones WebSocket para eventos en tiempo real.
+        reverse_proxy localhost:8000 {
             header_up Host {host}
             header_up Connection "Upgrade"
             header_up Upgrade {http_upgrade}
         }
     }
 
-    # Rutas para cargar archivos estáticos directamente.
+    # Manejar archivos estáticos para recursos específicos.
     handle_path /static/* {
         root * /srv/static
         file_server
     }
 
-    # Manejar rutas no definidas como errores 404.
     handle {
         respond "Not Found" 404
     }
 }
 
-# Dominio para el frontend (estático en Cloudflare)
+# Frontend en Cloudflare
 cerrajerialjr.com.ar {
     encode gzip
 
-    # Servir los archivos estáticos de Cloudflare.
+    # Servir archivos estáticos del frontend
     root * /srv/frontend
     file_server
 }
