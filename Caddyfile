@@ -3,7 +3,7 @@ cerrajerialjr.pages.dev {
 
     @backend_routes path /_event/* /ping /_upload /_upload/*
     handle @backend_routes {
-        reverse_proxy app:8000
+        reverse_proxy app
     }
 
     root * /srv
