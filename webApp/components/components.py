@@ -1,4 +1,5 @@
 import reflex as rx
+import reflex_chakra as chakra
 from reflex.style import toggle_color_mode
 from ..styles.styles import style_notify,Size
 from ..repository.base_state import State
@@ -41,8 +42,7 @@ def navbar_user() -> rx.Component:
                         rx.hstack(
                             navbar_link("Home", "/#"),
                             navbar_link("Sobre Nosotros", "/about"),
-                            rx.cond(State.is_authenticated == True,
-                            navbar_link("Calculadoras", "/calcs")),
+                            rx.cond(State.is_authenticated,navbar_link("Calculadoras", "/calcs")),
                             navbar_link("Contacto", "/contact"),
                             spacing="5",
                             justify="between" 
@@ -134,9 +134,6 @@ def image_component() -> rx.Component:
     #     overflow="hidden",  # Oculta cualquier desbordamiento de la imagen
     #     padding=Size.BIG.value,
     # )
-
-
-
 
 def footer_item(text: str, href: str) -> rx.Component:
     return rx.link(rx.text(text, size="3"), href=href)
@@ -301,11 +298,10 @@ def user_menu() -> rx.Component:
                         radius="full",
                     )
                 ),
-                rx.menu.content(
-                    rx.cond(State.is_authenticated == False,
-                    rx.menu.item("Log in",on_click=rx.redirect(LOGIN_ROUTE))),
-                    # rx.cond(State.is_authenticated == False,
-                    # rx.menu.item("Sign up",on_click=rx.redirect(REGISTER_ROUTE))),
+                rx.menu.content(                    
+                    rx.menu.item("Log in",on_click=rx.redirect(LOGIN_ROUTE)),
+                    rx.cond(State.is_authenticated,
+                    rx.menu.item("Sign up",on_click=rx.redirect(REGISTER_ROUTE))),
                     rx.menu.separator(),
                     rx.menu.item("Log out",on_click=State.do_logout),
                     bg=rx.color(color, 2),
@@ -321,7 +317,7 @@ def menu_movile() -> rx.Component:
                     rx.menu.content(
                         rx.menu.item("Home",on_click=rx.redirect("/#")),
                         rx.menu.item("Sobre Nosotros",on_click=rx.redirect("/about")),
-                        rx.cond(State.is_authenticated == True,
+                        rx.cond(State.is_authenticated,
                         rx.menu.item("Calculadoras",on_click=rx.redirect("/calcs"))),
                         rx.menu.item("Contacto",on_click=rx.redirect("/contact")),
                     ),
@@ -496,14 +492,14 @@ def singup_component() -> rx.Component:
     return rx.fragment(
         rx.cond(
             RegistrationState.success,
-            rx.chakra.vstack(
-                rx.chakra.text("Registration successful!"),
-                rx.chakra.spinner(),
+            chakra.vstack(
+                chakra.text("Registration successful!"),
+                chakra.spinner(),
             ),
-            rx.chakra.vstack(
+            chakra.vstack(
                 rx.cond(  # conditionally show error messages
                     RegistrationState.error_message != "",
-                    rx.chakra.text(RegistrationState.error_message),
+                    chakra.text(RegistrationState.error_message),
                 ),
                 register_form,
                 padding_top=Size.SMALL.value,
@@ -536,10 +532,11 @@ def about_component() -> rx.Component:
     ),
     justify="center",
             align="center",
-            width="100%",
+            width="auto",
             height="100%",
-            padding_bottom="5rem",
-            padding_top="5rem",
+            padding_bottom="2rem",
+            padding_top="2rem",
+            padding_x="8rem"
             
         ),
 
@@ -664,13 +661,13 @@ def login_component() -> rx.Component:
     return rx.flex(
                 rx.cond(
                     LoginState.is_hydrated,  # type: ignore
-                    rx.chakra.vstack(
+                    chakra.vstack(
                         rx.cond(  # conditionally show error messages
                             LoginState.error_message != "",
-                            rx.chakra.text(LoginState.error_message),
+                            chakra.text(LoginState.error_message),
                         ),
                         login_form,
-                        rx.chakra.link("Register", href=REGISTER_ROUTE),
+                        chakra.link("Register", href=REGISTER_ROUTE),
                         padding_top="10vh",
                             ),
                         ),

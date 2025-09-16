@@ -1,34 +1,44 @@
-# This Dockerfile is used to deploy a single-container Reflex app instance.
+# This Dockerfile is used to deploy a single-container Reflex app instance
+# to services like Render, Railway, Heroku, GCP, and others.
+
+# It uses a reverse proxy to serve the frontend statically and proxy to backend
+# from a single exposed port, expecting TLS termination to be handled at the
+# edge by the given platform.
 FROM python:3.11
 
-# Set environment variables
-ENV PYTHONUNBUFFERED=1
-ENV PATH="/app/.venv/bin:$PATH"
+# Instala Caddy server dentro de la imagen
+RUN apt-get update -y && apt-get install -y caddy && rm -rf /var/lib/apt/lists/*
 
-# Set the working directory
+# Establece el directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# Install app dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy the application files
+# Copia el contexto local al contenedor (según .dockerignore)
 COPY . .
 
-# Ensure the necessary directories exist
-RUN mkdir -p /app/.local/share/reflex
+# Instala los requisitos de la aplicación y Reflex dentro del contenedor
+RUN pip install -r requirements.txt
 
-# Initialize the application
+# Despliega las plantillas y prepara la aplicación
 RUN reflex init
 
-# Build the frontend only
-RUN reflex export --frontend-only --no-zip
+# Exporta el frontend y lo mueve al directorio de Caddy para ser servido
+RUN reflex export --frontend-only --no-zip --loglevel debug && mv .web/_static/* /srv/ && rm -rf .web
 
-# Ensure correct permissions for the application directory
-RUN chown -R root:root /app
+# Copia el Caddyfile al contenedor
+COPY Caddyfile /etc/caddy/Caddyfile
 
-# Expose necessary ports
-EXPOSE 8000 3000
+# Define la señal para detener el contenedor
+STOPSIGNAL SIGKILL
 
-# Run the backend only
-CMD [ -d alembic ] && reflex db migrate; reflex run --backend-only
+# Expone el puerto configurado
+EXPOSE $PORT
+
+# # Ejecuta las migraciones y luego inicia Caddy junto con el backend de Reflex
+# CMD [ -d alembic ] && reflex db migrate; \
+#     caddy start --config /etc/caddy/Caddyfile && reflex run --env prod --backend-only --loglevel debug \
+    
+
+# Apply migrations before starting the backend.
+CMD [ -d alembic ] && reflex db migrate; \
+    caddy start --config /etc/caddy/Caddyfile && redis-server --daemonize yes\
+    exec reflex run --env prod --backend-only

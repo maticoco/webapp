@@ -34,4 +34,28 @@ cerrajerialjr.com.ar {
     # Servir archivos estáticos del frontend
     root * /srv/frontend
     file_server
+
+    # Redirigir las rutas que necesitan ser manejadas por el backend
+    @backend_routes {
+        path /_event/* /ping /_upload /_upload/*
+    }
+    handle @backend_routes {
+        reverse_proxy {$BACKEND_URL} {
+            header_up Host {http.reverse_proxy.upstream.hostport}
+            header_up X-Forwarded-Host {host}
+        }
+    }
+
+    # Si no se encuentra un archivo estático, mostrar 404
+    route {
+        try_files {path} {path}/ /404.html
+    }
+}
+
+# Bloque para manejar el backend si quieres que sea accesible desde aquí (opcional)
+{$SUBDOMAIN_BACK} {
+    reverse_proxy {$BACKEND_URL} {
+        header_up Host {http.reverse_proxy.upstream.hostport}
+        header_up X-Forwarded-Host {host}
+    }
 }

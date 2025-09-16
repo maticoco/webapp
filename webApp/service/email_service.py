@@ -18,7 +18,7 @@ class EmailServiceState(rx.State):
     notification: str = ""  # Almacena solo el mensaje de notificación
     form_data: dict = {}
 
-    @rx.background
+    @rx.event(background=True)
     async def send_email(self, form_data):
         """Función para enviar el correo con los datos del formulario."""
         
@@ -27,7 +27,7 @@ class EmailServiceState(rx.State):
         cc_email = form_data.get("email", "")
         phone = form_data.get("phone", "")
         message = form_data.get("message", "")
-        subject = f"VMH Constructora solicitud de contacto - {first_name.capitalize()} {last_name.capitalize()} quiere comunicarse"
+        subject = f"Cerrajeria LJR solicitud de contacto - {first_name.capitalize()} {last_name.capitalize()} quiere comunicarse"
         body = f"Nombre: {first_name}\nApellido: {last_name}\nEmail: {cc_email}\nTeléfono: {phone}\nMensaje: {message}"
 
         # Crear el mensaje con CC y BCC
@@ -60,7 +60,7 @@ class EmailServiceState(rx.State):
             print(f"Error al enviar el correo: {str(e)}")
           
 
-    @rx.background
+    @rx.event(background=True)
     async def handle_submit(self, form_data: dict):
         """Manejar el envío del formulario."""
         async with self:
@@ -69,7 +69,7 @@ class EmailServiceState(rx.State):
             return EmailServiceState.send_email(self.form_data)  # Devuelves la tarea
 
 
-    @rx.background
+    @rx.event(background=True)
     async def clear(self):
         """Manejar el envío del formulario."""
         async with self:

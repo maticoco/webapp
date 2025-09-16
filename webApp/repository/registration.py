@@ -71,4 +71,3 @@ class RegistrationState(State):
         yield
         await asyncio.sleep(0.5)
         yield [rx.redirect(LOGIN_ROUTE), RegistrationState.set_success(False)]
-

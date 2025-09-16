@@ -45,4 +45,3 @@ class UserState(rx.State):
 
     def search_on_change(self, value: str):
         self.user_search = value
-
