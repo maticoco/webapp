@@ -1,61 +1,11 @@
-{
-    # Habilitar logs para depurar.
-    debug
-}
-
-# Backend en Render (FastAPI + Reflex Backend)
-back.cerrajerialjr.com.ar {
+cerrajerialjr.pages.dev {
     encode gzip
 
-    @backend_routes path /admin* /ping /upload* /_event/*
+    @backend_routes path /_event/* /ping /_upload /_upload/*
     handle @backend_routes {
-        reverse_proxy localhost:8000 {
-            header_up Host {host}
-            header_up Connection "Upgrade"
-            header_up Upgrade {http_upgrade}
-        }
+        reverse_proxy app:8000
     }
 
-    # Manejar archivos estáticos para recursos específicos.
-    handle_path /static/* {
-        root * /srv/static
-        file_server
-    }
-
-    handle {
-        respond "Not Found" 404
-    }
-}
-
-# Frontend en Cloudflare
-cerrajerialjr.com.ar {
-    encode gzip
-
-    # Servir archivos estáticos del frontend
-    root * /srv/frontend
+    root * /srv
     file_server
-
-    # Redirigir las rutas que necesitan ser manejadas por el backend
-    @backend_routes {
-        path /_event/* /ping /_upload /_upload/*
-    }
-    handle @backend_routes {
-        reverse_proxy {$BACKEND_URL} {
-            header_up Host {http.reverse_proxy.upstream.hostport}
-            header_up X-Forwarded-Host {host}
-        }
-    }
-
-    # Si no se encuentra un archivo estático, mostrar 404
-    route {
-        try_files {path} {path}/ /404.html
-    }
-}
-
-# Bloque para manejar el backend si quieres que sea accesible desde aquí (opcional)
-{$SUBDOMAIN_BACK} {
-    reverse_proxy {$BACKEND_URL} {
-        header_up Host {http.reverse_proxy.upstream.hostport}
-        header_up X-Forwarded-Host {host}
-    }
 }

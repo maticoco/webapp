@@ -1,0 +1,35 @@
+;;
+;; Domain:     cerrajerialjr.com.ar.
+;; Exported:   2025-09-16 19:05:54
+;;
+;; This file is intended for use for informational and archival
+;; purposes ONLY and MUST be edited before use on a production
+;; DNS server.  In particular, you must:
+;;   -- update the SOA record with the correct authoritative name server
+;;   -- update the SOA record with the contact e-mail address information
+;;   -- update the NS record(s) with the authoritative name servers for this domain.
+;;
+;; For further information, please consult the BIND documentation
+;; located on the following website:
+;;
+;; http://www.isc.org/
+;;
+;; And RFC 1035:
+;;
+;; http://www.ietf.org/rfc/rfc1035.txt
+;;
+;; Please note that we do NOT offer technical support for any use
+;; of this zone data, the BIND name server, or any other third-party
+;; DNS software.
+;;
+;; Use at your own risk.
+;; SOA Record
+cerrajerialjr.com.ar	3600	IN	SOA	ignat.ns.cloudflare.com. dns.cloudflare.com. 2050971615 10000 2400 604800 3600
+
+;; NS Records
+cerrajerialjr.com.ar.	86400	IN	NS	ignat.ns.cloudflare.com.
+cerrajerialjr.com.ar.	86400	IN	NS	tegan.ns.cloudflare.com.
+
+;; CNAME Records
+back.cerrajerialjr.com.ar.	1	IN	CNAME	webapp-tx8w.onrender.com. ; cf_tags=cf-proxied:true
+cerrajerialjr.com.ar.	1	IN	CNAME	cerrajerialjr.pages.dev. ; cf_tags=cf-proxied:true
